@@ -3,3 +3,15 @@
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
 
+svg {
+  border-style: solid;
+  border-width : 1px;
+}
+
+svg{
+  position: relative;
+}
+
+image{
+  position: absolute;
+}
