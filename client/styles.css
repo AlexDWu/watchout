@@ -12,10 +12,10 @@ svg{
   position: relative;
 }
 
-image{
-  position: absolute;
+.enemy {
+  r: 50px;
+  fill: green;
 }
-
 .player {
-  r: 15px;
+  r: 50px;
 }
