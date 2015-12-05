@@ -5,8 +5,14 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-svg.append("circle")
+var numEnemies = 5;
+//var arrEnemies = [];
+for (var i=0; i<numEnemies; i++){
+  svg.append("circle")
   .attr('class', 'enemy');
+}
+
+
 
 var collisionDetected = function(player, enemy){
   var playerPosition = player[0][0].style;
@@ -18,11 +24,13 @@ var collisionDetected = function(player, enemy){
 }
 
 setInterval(function() {
-  svg.select(".enemy")
-  .style({
-    "cx": (Math.random() * width).toString() + "px", 
-    "cy": (Math.random() * height).toString() + "px"
-  });
+  svg.selectAll(".enemy")
+  .transition()
+  .duration(1000)
+    .style({
+      "cx": (Math.random() * width).toString() + "px", 
+      "cy": (Math.random() * height).toString() + "px"
+    });
   if(collisionDetected(svg.select(".player"), svg.select(".enemy"))){
     console.log("collisionDetected!");
   }
