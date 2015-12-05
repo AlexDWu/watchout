@@ -7,12 +7,35 @@ var svg = d3.select("body").append("svg")
 
 var numEnemies = 5;
 //var arrEnemies = [];
-for (var i=0; i<numEnemies; i++){
-  svg.append("circle")
-  .attr('class', 'enemy');
+
+function makeData(n){
+  var enemiesData = [];
+  for (var i=0; i<n; i++){
+    enemiesData.push({
+      x: Math.random()*width, 
+      y: Math.random()*height
+    });  
+  }
+  return enemiesData;
 }
 
+var updateEnemies = function(data){
+  //data join
+  var enemies = svg.selectAll('.enemy').data(data);
+  //update
+  enemies.transition().duration(1000)
+    .style({
+      "cx": (function(d){return d.x.toString() + "px"}), 
+      "cy": (function(d){return d.y.toString() + "px"}),
+    });
 
+  //enter
+  enemies.enter().append('circle').attr('class','enemy')
+    .style({
+      "cx": (function(d){return d.x.toString() + "px"}), 
+      "cy": (function(d){return d.y.toString() + "px"}),
+    });
+}
 
 var collisionDetected = function(player, enemy){
   var playerPosition = player[0][0].style;
@@ -24,13 +47,7 @@ var collisionDetected = function(player, enemy){
 }
 
 setInterval(function() {
-  svg.selectAll(".enemy")
-  .transition()
-  .duration(1000)
-    .style({
-      "cx": (Math.random() * width).toString() + "px", 
-      "cy": (Math.random() * height).toString() + "px"
-    });
+  updateEnemies(makeData(numEnemies));
   if(collisionDetected(svg.select(".player"), svg.select(".enemy"))){
     console.log("collisionDetected!");
   }
