@@ -15,3 +15,7 @@ svg{
 image{
   position: absolute;
 }
+
+.player {
+  r: 15px;
+}
