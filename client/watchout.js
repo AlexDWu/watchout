@@ -5,8 +5,15 @@ var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-// initialize score to 0
-var currentScore = 0;
+svg.append('filter')
+  .attr('id', 'this_image')
+  .attr('patternUnits', "userSpaceOnUse")
+  .attr('x','0%')
+  .attr('y','0%')
+  .attr('height','100%')
+  .attr('width','100%')
+.append('feImage')
+  .attr('xlink:href', 'asteroid.png');
 
 // the number of enemies to draw
 var numEnemies = 5;
@@ -75,10 +82,14 @@ var updateEnemies = function(data){
       return function(time) {
         // check for collision
         if(collisionDetected(player, this)){
+          // set high score
+          if(currentScore > highScore){
+            highScore = currentScore;
+          }
+          //count collisions
+          numCollisions++;
           //reset score to 0
           currentScore = 0;
-          // d3.select('.current').select('span').data([0]).text("0");
-          updateScore(currentScore);
         }
       };
     })
@@ -95,26 +106,30 @@ var updateEnemies = function(data){
     .style({
       "cx": (function(d){return d.x.toString() + "px"}), 
       "cy": (function(d){return d.y.toString() + "px"}),
-    });
+    })
+    .attr('filter','url(#this_image)')
 }
 
+
+// initialize score to 0
+var currentScore = 0;
+var highScore = 0;
+var numCollisions = 0;
+
 // updates our score board
-var updateScore = function(currentScore){
-  var currentScoreBoard = d3.select('.current').select('span').data([currentScore]);
-  if(currentScore === 0 ){
-    // reset DOM immediately to 0
-    currentScoreBoard.interrupt().text(function(d){return d});
-  }
-    // smooth score transition
-    currentScoreBoard
-      .transition().duration(999999) // can anyone last this long?
-      .tween("scoreTransition",function(data, index){
-        return function(time){
-          // updating the text of score display smoothly over a second
-          this.innerText = Math.floor((data += 1)).toString();
-        };
-      });
+var updateScore = function(){
+  d3.select('.current').select('span').data([currentScore])
+    .text(function(d){return d});
+  d3.select('.highscore').select('span').data([highScore])
+    .text(function(d){return d});
+  d3.select('.collisions').select('span').data([numCollisions])
+    .text(function(d){return d});
 };
+
+d3.timer(function(timeElapsed){
+  currentScore++;
+  updateScore();
+});
 
 // calls updateEnemies every one second
 setInterval(function() {
