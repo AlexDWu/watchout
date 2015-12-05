@@ -8,14 +8,12 @@ var svg = d3.select("body").append("svg")
 var numEnemies = 5;
 //var arrEnemies = [];
 
-function makeData(n, oldData){
+function makeData(n){
   var enemiesData = [];
   for (var i=0; i<n; i++){
     enemiesData.push({
       x: Math.random()*width, 
       y: Math.random()*height,
-      oldx: oldData ? oldData[i].x : 0,
-      oldy: oldData ? oldData[i].y : 0,
     });  
   }
   return enemiesData;
@@ -39,7 +37,7 @@ dragEventListner.on("drag", function(){
 
 var collisionDetected = function(player, enemy){
   var playerPosition = player[0][0].style;
-  var enemyPosition = enemy[0][0].style
+  var enemyPosition = enemy.style
   var xDistance = parseInt(playerPosition.cx.slice(0, -2)) - parseInt(enemyPosition.cx.slice(0, -2));
   var yDistance = parseInt(playerPosition.cy.slice(0, -2)) - parseInt(enemyPosition.cy.slice(0, -2));
   var totalDistance = Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
@@ -53,7 +51,9 @@ var updateEnemies = function(data){
   enemies.transition().duration(1000)
     .tween("collision", function(data, index){
       return function(time) {
-        collisionDetected(player, this);
+        if(collisionDetected(player, this)){
+          console.log("collisionDetected with " + index);
+        }
       };
     })
     .style({
@@ -68,18 +68,9 @@ var updateEnemies = function(data){
       "cx": (function(d){return d.x.toString() + "px"}), 
       "cy": (function(d){return d.y.toString() + "px"}),
     });
-
-  return(data);
 }
 
-var oldData; // for keeping track of old data
 setInterval(function() {
-  var newData = makeData(numEnemies, oldData)
-
-  oldData = updateEnemies(newData); // new data is now old data for next interation
-  // if(collisionDetected(svg.select(".player"), svg.select(".enemy"))){
-  //   console.log("collisionDetected!");
-  // }
-
+  updateEnemies(makeData(numEnemies)); // new data is now old data for next interation
 }, 1000);
 
