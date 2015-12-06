@@ -97,6 +97,8 @@ var updateEnemies = function(data){
     .style({
       "cx": (function(d){return d.x.toString() + "px"}), 
       "cy": (function(d){return d.y.toString() + "px"}),
+      "transform": "rotate(1080deg)",
+      "transform-origin": (function(d){return ""+d.x+"px "+d.y+"px";}),
     });
 
   //enter selection
@@ -106,6 +108,8 @@ var updateEnemies = function(data){
     .style({
       "cx": (function(d){return d.x.toString() + "px"}), 
       "cy": (function(d){return d.y.toString() + "px"}),
+      "transform": "rotate(1080deg)",
+      "transform-origin": (function(d){return ""+d.x+"px "+d.y+"px";}),
     })
     .attr('filter','url(#this_image)')
 }
